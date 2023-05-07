@@ -6,108 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="dashboard.css">
 </head>
-<style>
-    #two{
-        border: 2px solid blue;
-        height: 90vh;
-        width: 100vw;
-        background-color: blue;
-        z-index: -1;
-    }
-    #userAmount{
-      border: 0px;
-      font-weight: bold;
-      color: blue;
-      margin-left: 20px;
-    }
-    #menu{
-      z-index: 1;
-      background-color: blue;
-      width: 100vw;
-      height: 150px;
-    }
-    #card{
-        position: absolute;
-        width: 90%;
-        top: 10%;
-        left: 5%;
-        height: 30%;
-    }
-    #three{
-        border: 0px solid red;
-        width: 200px;
-        height: 50px;
-        background-color: red;
-        margin-left: 180px;
-        color: white;
-    }
-    #four{
-        border: 0px solid red;
-        width: 200px;
-        height: 50px;
-        background-color: blue;
-        margin-left: 20px;
-        color: white;
-    }
-    #five{
-        border: 0px solid red;
-        width: 200px;
-        height: 50px;
-        background-color: green;
-        margin-left: 20px;
-        color: white;
-    }
-    #six{
-        border: 0px solid red;
-        width: 200px;
-        height: 50px;
-        background-color: purple;
-        margin-left: 20px;
-        color: white;
-    }
-    #well{
-      margin-top: -120px;
-      margin-left: -600px;
-      color: white;
-    }
-    #log{
-      border: 5px solid red;
-      text-transform: none !important;
-      width: 50px ;
-      background-color: brown !important;
-    }
-    #cardone{
-      margin-left: 120px;
-      width: 40%;
-    padding-top: 80px;
-    }
-    #cardtwo{
-      margin-left: 20px;
-      width: 80%;
-      margin-top: 80px;
-    }
-    #cardthree{
-      margin-left: 120px;
-      width: 40%;
-    }
-    #cardfour{
-      margin-left: 20px;
-      width: 40%;
-      margin-bottom: 20px;
-    }
-    #bell{
-      position: absolute;
-      right: 3%;
-      top: 2%;
-    }
-    ::placeholder{
-      font-size: 15px;
-      font-weight: bold;
-    }
-    
-    
-</style>
+
 <body>
     <div class="col-lg-11 col-md-8 col-sm-12">
       <img id="bell" src="./image/bell.png" height="30px" alt="">
@@ -135,7 +36,7 @@
             <li><a class="dropdown-item" href="#"><span><img src="./image/sett.jpg" height="20px" alt=""></span> Settings & Support</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#"><span><img src="./image/cheque.jpg" height="20px" alt=""></span> Cheques</a></li>
-            <a href="index.html"><p class="btn btn-danger w-100 mt-2"><span><img src="./image/logout.jpg" height="30px" alt=""></span> Logout</p></a>
+            <a href="index.html"><button onclick="logout()" class="btn btn-danger w-100 mt-2"><span><img src="./image/logout.jpg" height="30px" alt=""></span> Logout</button></a>
             
           </ul>
         </li>
@@ -198,6 +99,8 @@
           </div>
         </div>
       </div>
+
+      
       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -219,37 +122,40 @@
       </div>
 
     <script>
+      if(!localStorage.userIndex){
+        window.location.href = 'signIn.html'
+      }
         var  allUsers = JSON.parse(localStorage.getItem("score")) ;
     var storage = localStorage.getItem("userIndex")
     userAmount.value = allUsers[storage].amount
-    
     document.getElementById('userInfo').innerHTML = `Welcome ${allUsers [storage].email} </br> Your Account Number is ${allUsers [storage].accountNumber}`
+    var Amount=allUsers[storage].amount
+     var tpin=allUsers[storage].pin
+
     const transfer=()=>{
-        var Amount=allUsers[storage].amount
-         var tpin=allUsers[storage].TransactionPin
          if(Amount<amounttranfer.value){
           alert("insufficient funds")
          } 
-         else if(pin.value==tpin){
-      allUsers[storage].amount= allUsers[storage].amount- Number(amounttranfer.value)
-      userAmount.value = allUsers[storage].amount
-      localStorage.setItem("score", JSON.stringify(allUsers));
-      window.location.hre = "congrats.html"
-       }
-        }
-         for (let index = 0; index < allUsers.length; index++) {
-            if(benA.value==allUsers[index].accountNumber && benN.value==allUsers[index].firstName)  
-            {allUsers[index].amount= Number(allUsers[index].amount)+Number(amounttranfer.value) 
-           localStorage.setItem("score", JSON.stringify(allUsers));
-           console.log(allUsers) 
-         } }
-    
+          else if(tpin == pin.value){   
+           allUsers[storage].amount=Number(allUsers[storage].amount) - Number(amounttranfer.value)
+          userAmount.value = allUsers[storage].amount
+          window.location.href = "congrats.html"
+          localStorage.setItem("score", JSON.stringify(allUsers));
+    }
+      for (let index = 0; index < allUsers.length; index++) {
+         if(benA.value==allUsers[index].accountNumber){
+          allUsers[index].amount=Number(allUsers[index].amount) +Number(amounttranfer.value)
+          localStorage.setItem("score", JSON.stringify(allUsers));
+         }
+      }    
+      }
+ 
       const deposit =()=>{
-          var y =  prompt("how much  did you want to deposit?")
-          var answer =  (Number(bal.value) +  Number(y))
-          console.log(answer);
-          // disp.innerHTML = answer
-          bal.value = answer
+        window.location.href = "deposit.html"
+          // var y =  prompt("how much  did you want to deposit?")
+          // allUsers[storage].amount  =  (Number(allUsers[storage].amount) +  Number(y))
+          //  userAmount.value = allUsers[storage].amount
+          //  localStorage.setItem("score", JSON.stringify(allUsers));
         }
         const buyAirtime =()=>{
           window.location.href = "airtime.html"
@@ -258,7 +164,10 @@
           // // disp.innerHTML = answer
           // bal.value = answer 
         }
-
+        const logout =()=>{
+          localStorage.removeItem('userIndex')
+          window.location.href = "signIn.html"
+        }
     </script>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
